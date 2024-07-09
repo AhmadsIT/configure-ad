@@ -73,7 +73,7 @@ Join Client-1 to Domain
 - Restart Client-1.
 - Login as local admin (labuser) and join to domain mydomain.com.
 
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/39e753ac-a73f-48f6-9b5c-a80b596fa130)
+![image](https://github.com/ahmadspain/configure-ad/assets/158358030/09cc1190-555a-4740-b9a1-38df6fca427d)
 
 Step 6: Setup Remote Desktop for Non-Admin Users on Client-1
 Allow Remote Desktop for Non-Admin Users
