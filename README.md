@@ -19,86 +19,75 @@ This tutorial outlines the implementation of on-premises Active Directory within
 
 <h2>Deployment and Configuration Steps</h2>
 
-Step 1: Setup Resources in Azure
+<b>1. Setup Domain Controller in Azure</b>
 
-Create Domain Controller VM (DC-1)
-
-- Use Windows Server 2022.
-- Note the Resource Group and Virtual Network (Vnet).
-- Set DC-1's NIC Private IP address to static.
+- Create a Resource Group and a Virtual Network with a Subnet.
+- Create the Domain Controller VM (Windows Server 2022) named "DC-1".
+- Set DC-1’s NIC private IP to static.
+- Disable the Windows Firewall for testing.
   
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/50b8179b-badf-4667-a64b-dcd187f44c42)
+![image](https://github.com/user-attachments/assets/5c013db9-2245-4381-b957-aede42945b7b)
 
-Step 2: Ensure Connectivity between Client and Domain Controller
+<b>2. Setup Client VM</b>
 
-Ping DC-1 from Client-1
+- Create Client VM (Windows 10) named "Client-1".
+- Set Client-1’s DNS settings to DC-1’s private IP.
+- Restart Client-1 and ping DC-1 to verify connectivity.
 
-- Login to Client-1 via Remote Desktop.
-- Open Command Prompt and perpetual ping DC-1's private IP (ping -t <ip>).
+![image](https://github.com/user-attachments/assets/69da26ee-0917-41a5-b72b-fd4db0d8a30a)
 
-Enable ICMPv4 on DC-1
+<b>3. Install Active Directory</b>
 
-- Login to DC-1.
-- Enable ICMPv4 inbound rule in Windows Firewall.
-
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/b9c22f02-9b31-48f7-b0c3-d7c59443ed3a)
-
-Step 3: Install Active Directory
-
-Install AD DS on DC-1
-
-- Login to DC-1.
-- Install Active Directory Domain Services.
-- Promote DC-1 as a domain controller for "mydomain.com".
-- Restart DC-1 and login as mydomain.com\labuser.
+- Log into DC-1 and install Active Directory Domain Services.
+- Promote as a DC and set up a new forest (e.g., mydomain.com).
+- Create Organizational Units (OUs) and a Domain Admin user.
+- Restart DC-1 and login as admin user.
   
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/d472e980-e705-4161-9a21-561191f81c6a)
+![image](https://github.com/user-attachments/assets/33088606-6a6d-40d1-a25c-4e2cdf3fbb5b)
 
-Step 4: Create Admin and Normal User Account in AD
+<b>4. Join Client-1 to Domain</b>
 
-Create Users in ADUC
+- Join Client-1 to the domain (mydomain.com).
+- Verify that Client-1 appears in ADUC and organize it into the new OU.
 
-- Create an OU named "_EMPLOYEES".
-- Create an OU named "_ADMINS".
-- Create user "Jane Doe" as "jane_admin".
-- Add "jane_admin" to "Domain Admins" group.
+![image](https://github.com/user-attachments/assets/a1bbe43d-1538-427c-99dd-d8a2ffc5430b)
 
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/6474e6e2-2680-416a-b8c1-43900daf624f)
+<b>5. Remote Desktop Setup</b>
 
-Step 5: Join Client-1 to Domain
+- Log into Client-1 as admin user.
+- Allow "domain users" access to Remote Desktop.
 
-Join Client-1 to Domain
+![image](https://github.com/user-attachments/assets/fa89358b-83d7-4a18-8205-95cd3f9163f5)
 
-- Set Client-1's DNS to DC-1's Private IP.
-- Restart Client-1.
-- Login as local admin (labuser) and join to domain mydomain.com.
+<b>6. Create Additional Users</b>
 
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/09cc1190-555a-4740-b9a1-38df6fca427d)
-
-Step 6: Setup Remote Desktop for Non-Admin Users on Client-1
-Allow Remote Desktop for Non-Admin Users
-
-- Login to Client-1 as mydomain.com\jane_admin.
-- Open System Properties > Remote Desktop.
-- Allow "domain users" access.
+- Use PowerShell to create multiple users in ADUC.
+- Attempt to log into Client-1 with one of the new accounts.
 
 ![image](https://github.com/ahmadspain/configure-ad/assets/158358030/9a65558a-ae33-4831-8e66-970167cc5068)
 
-Step 7: Create Additional Users and Test Login
+<b>7. Account Lockouts</b>
 
-Create Users with PowerShell
+- Lock out an account after failed login attempts and observe in ADUC.
+- Reset the password and unlock the account.
 
-- Login to DC-1 as jane_admin.
-- Use PowerShell ISE as Administrator.
-- Run script to create users.
+![image](https://github.com/user-attachments/assets/892720ff-7c9a-4e19-a660-c196f0b271ff)
 
-Test Login with Additional Users
+<b>8. DNS Configuration</b>
 
-- Attempt to login to Client-1 with newly created user credentials.
+- Create an A-record and a CNAME record in DC-1.
+- Test the DNS resolution from Client-1.
+  
+![image](https://github.com/user-attachments/assets/6ea3ad05-6f1e-48b4-aff7-db70e5b5d3ce)
 
-![image](https://github.com/ahmadspain/configure-ad/assets/158358030/9dead55f-0313-420a-9ebc-ea3deb0d5c94)
+<b>9. File Shares Setup</b>
+- Create shared folders with different permissions on DC-1.
+- Test access from Client-1 as a normal user.
 
-Step 8: Finish
+![image](https://github.com/user-attachments/assets/2531a0e8-3242-45df-aa46-cb048733f094)
 
-- Validate all users can login to Client-1 successfully.
-- Ensure organizational units (like "_CLIENTS") are properly used for organizing objects in AD, if desired.
+<b>10. Create Security Groups</b>
+- Create a security group for ACCOUNTANTS and set permissions for the accounting folder.
+- Test access for users in and out of the group.
+
+![image](https://github.com/user-attachments/assets/1075fe74-91f1-4ad4-b865-0ca0c7d3655c)
