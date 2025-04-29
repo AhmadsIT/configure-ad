@@ -60,7 +60,7 @@ Use ADUC to move Client-1 into the appropriate OU for better organization.
 
 To allow support staff or general users to use RDP:
   - Log into Client-1 using the Domain Admin credentials.
-  - Open <b>System Properties → Remote Settings</b>, and add <b>“Domain Users”</b> to the list of allowed remote desktop users.
+  - Open <b>System Properties → Remote Desktop</b>, and add <b>“Domain Users”</b> to the list of allowed remote desktop users.
 
 ![image](https://github.com/user-attachments/assets/fa89358b-83d7-4a18-8205-95cd3f9163f5)
 
